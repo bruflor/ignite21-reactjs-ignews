@@ -23,5 +23,5 @@ export default function Header() {
         <SignButton />
       </div>
     </header>
-  );
+  )
 }

@@ -1,7 +1,8 @@
 import { getPrismicClient } from "@/services/prismic";
-import Head from "next/head";
 import { RichText } from "prismic-dom"
+import Head from "next/head";
 import styles from './styles.module.scss'
+import Link from "next/link";
 
 interface PostsProps {
     posts: Post[]
@@ -15,9 +16,6 @@ type Post = {
 }
 
 export default function Posts({ posts }: PostsProps) {
-    // const prismic = getPrismicClient();
-    // console.log(prismic)
-
 
     return (
         <>
@@ -28,12 +26,12 @@ export default function Posts({ posts }: PostsProps) {
             <main className={styles.container}>
                 <div className={styles.posts}>
                     {posts.map(post => (
-                        <a href="#">
+                        <Link href={`/posts/${post.slug}`} key={post.slug}>
                             <time>{post.updatedAt}</time>
                             <strong>{post.title}</strong>
                             <p>{post.excerpt}</p>
 
-                        </a>
+                        </Link>
                     ))}
                 </div>
             </main>
@@ -60,8 +58,6 @@ export async function getServerSideProps() {
             })
         }
     })
-
-    console.log(result);
 
     return {
         props: { posts },
