@@ -42,7 +42,7 @@ export default function PreviewPost({ post }: PreviewPostProps) {
 
                <div className={styles.continueReading}>
                 Wanna continue reading?
-                <Link href="/home"><span>Subscribe now 🤗</span></Link>                    
+                <Link href="/"><span>Subscribe now 🤗</span></Link>                    
                </div>
             </article>
          </main>
@@ -82,6 +82,6 @@ export const getStaticProps: GetStaticProps = async ({ params }: any) => {
 
    return {
     props: { post, },
-    redirect: 60 * 30//30 minutos
+    redirect: 60 * 30 //30 minutos
     }
 }

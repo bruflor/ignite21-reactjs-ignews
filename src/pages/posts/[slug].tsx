@@ -35,14 +35,14 @@ export const getServerSideProps = async ({ req, params }: any) => {
    const session = await getSession({ req })
    const { slug } = params
    // console.log(session?.user)
-   if (session?.user == undefined) {
-      return {
-         redirect:{
-            destination: '/',
-            permanent: false
-         }
-      }
-   }
+   // if (session?.user == undefined) {
+   //    return {
+   //       redirect:{
+   //          destination: '/',
+   //          permanent: false
+   //       }
+   //    }
+   // }
 
    const prismic = getPrismicClient(req)
    const response = await prismic.getByUID<any>("post", String(slug), {});
