@@ -1,0 +1,28 @@
+{
+  "uid": {
+    "__TYPE__": "UIDContent",
+    "value": "south"
+  },
+  "title": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Occaecat incididunt labore ut enim enim proident. Commodo est ut non pariatur reprehenderit eu ut."
+        }
+      }
+    ]
+  },
+  "content": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Tempor do in duis anim ea fugiat occaecat id nisi incididunt elit ullamco exercitation est. Id exercitation deserunt consequat veniam in eu."
+        }
+      }
+    ]
+  }
+}

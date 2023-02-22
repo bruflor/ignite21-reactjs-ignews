@@ -2,15 +2,16 @@ import { stripe } from "../../services/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 import Stripe from "stripe";
-import { saveSubscrition } from "./_lib/manageSubscription";
+import { saveSubscription } from "./_lib/manageSubscription";
 
 async function buffer(readable: Readable) {
   const chunks = [];
 
   for await (const chunk of readable) {
     chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-    return Buffer.concat(chunks);
   }
+
+  return Buffer.concat(chunks);
 }
 
 const relevantEvents = new Set(["checkout.session.completed"]);
@@ -25,8 +26,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       event = stripe.webhooks.constructEvent(
         buf,
-        secret,
-        process.env.STRIPE_WEBHOOK_SECRET
+        secret as string,
+        process.env.STRIPE_WEBHOOK_SECRET as string
       );
     } catch (err: any) {
       return res.status(400).send(`Webhook error: ${err.message}`);
@@ -39,9 +40,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           case "checkout.session.completed":
             const checkoutSession = event.data
               .object as Stripe.Checkout.Session;
-            await saveSubscrition(
-              checkoutSession.subscription.toString(),
-              checkoutSession.customer.toString()
+            await saveSubscription(
+              checkoutSession.subscription?.toString() as string,
+              checkoutSession.customer?.toString() as string
             );
             break;
           default:
