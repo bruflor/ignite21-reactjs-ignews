@@ -1,58 +1,69 @@
 import { getPrismicClient } from "@/services/prismic";
 import Head from "next/head";
+import { RichText } from "prismic-dom"
 import styles from './styles.module.scss'
 
-export default function Posts(){
-    const prismic = getPrismicClient();
+interface PostsProps {
+    posts: Post[]
+}
+type Post = {
+    slug: string;
+    title: string;
+    excerpt: string;
+    updatedAt: string;
+
+}
+
+export default function Posts({ posts }: PostsProps) {
+    // const prismic = getPrismicClient();
+    // console.log(prismic)
 
 
-
-    return(
+    return (
         <>
-        <Head>
-            <title>Posts | Ignews</title>
-        </Head>
+            <Head>
+                <title>Posts | Ignews</title>
+            </Head>
 
-        <main className={styles.container}>
-            <div className={styles.posts}>
+            <main className={styles.container}>
+                <div className={styles.posts}>
+                    {posts.map(post => (
+                        <a href="#">
+                            <time>{post.updatedAt}</time>
+                            <strong>{post.title}</strong>
+                            <p>{post.excerpt}</p>
 
-                <a href="#">
-                    <time>12 de março de 2021</time>
-                    <strong>Lorem ipsum, dolor sit amet </strong>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus voluptatum modi magni maiores, exercitationem minima maxime recusandae obcaecati, est dolore eum? Fugit sed quaerat temporibus. Molestias nulla dolores tempore vitae? Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa, accusantium impedit voluptatibus pariatur recusandae. Fuga voluptatibus odio quas molestiae, nisi laboriosam magnam voluptatem laborum quisquam maiores velit, est vitae!</p>
-
-                </a>
-                
-                <a href="#">
-                    <time>12 de março de 2021</time>
-                    <strong>Lorem ipsum, dolor sit amet </strong>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus voluptatum modi magni maiores, exercitationem minima maxime recusandae obcaecati, est dolore eum? Fugit sed quaerat temporibus. Molestias nulla dolores tempore vitae? Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa, accusantium impedit voluptatibus pariatur recusandae. Fuga voluptatibus odio quas molestiae, nisi laboriosam magnam voluptatem laborum quisquam maiores velit, est vitae!</p>
-
-                </a>
-                
-                <a href="#">
-                    <time>12 de março de 2021</time>
-                    <strong>Lorem ipsum, dolor sit amet </strong>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus voluptatum modi magni maiores, exercitationem minima maxime recusandae obcaecati, est dolore eum? Fugit sed quaerat temporibus. Molestias nulla dolores tempore vitae? Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa, accusantium impedit voluptatibus pariatur recusandae. Fuga voluptatibus odio quas molestiae, nisi laboriosam magnam voluptatem laborum quisquam maiores velit, est vitae!</p>
-
-                </a>
-               
-            </div>
-        </main>
+                        </a>
+                    ))}
+                </div>
+            </main>
         </>
     )
 }
 
 export async function getServerSideProps() {
     const prismic = getPrismicClient()
-  
-    const posts = await prismic.getByType("post", {
-      pageSize: 100,
+
+    const result = await prismic.getByType("post", {
+        pageSize: 100,
     });
-  
-    console.log(posts);
-    
+
+    const posts = result.results.map(post => {
+        return {
+            slug: post.uid,
+            title: RichText.asText(post.data.title),
+            excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? "",
+            updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            })
+        }
+    })
+
+    console.log(result);
+
     return {
-      props: { posts },
+        props: { posts },
     };
-  }
+}
