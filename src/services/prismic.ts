@@ -2,6 +2,7 @@ import * as Prismic from '@prismicio/client'
 
 export function getPrismicClient(req?:unknown) {
   const prismic = Prismic.createClient(
+    // @ts-ignore
     process.env.PRISMIC_ENDPOINT,
     {
       accessToken: process.env.PRISMIC_ACCESS_TOKEN
