@@ -26,11 +26,11 @@ export default NextAuth({
           q.If(
             q.Not(
               q.Exists(
-                q.Match(q.Index("user_by_email"), q.Casefold(String(user.email)))
+                q.Match(q.Index("user_by_email"), q.Casefold(String(user.email!)))
               )
             ),
             q.Create(q.Collection("users"), { data: { email } }),
-            q.Get(q.Match(q.Index("user_by_email"), q.Casefold(String(user.email))))
+            q.Get(q.Match(q.Index("user_by_email"), q.Casefold(String(user.email!))))
           )
         );
         return true;
