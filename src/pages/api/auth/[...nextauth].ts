@@ -21,22 +21,24 @@ export default NextAuth({
     //@ts-ignore
     async signIn({ user, account, profile }) {
       const { email } = user;
+      if(email){
       try {
         await fauna.query(
           q.If(
             q.Not(
               q.Exists(
-                q.Match(q.Index("user_by_email"), q.Casefold(String(user.email!)))
+                q.Match(q.Index("user_by_email"), q.Casefold(email))
               )
             ),
             q.Create(q.Collection("users"), { data: { email } }),
-            q.Get(q.Match(q.Index("user_by_email"), q.Casefold(String(user.email!))))
+            q.Get(q.Match(q.Index("user_by_email"), q.Casefold(email)))
           )
         );
         return true;
       } catch {
         return false;
       }
+    }
     },
   },
 });
